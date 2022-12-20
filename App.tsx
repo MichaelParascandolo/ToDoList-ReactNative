@@ -1,4 +1,7 @@
-import React, { useState } from "react";
+import React, { useCallback, useEffect, useState } from "react";
+import * as SplashScreen from "expo-splash-screen";
+import { useFonts } from "expo-font";
+import Task from "./components/Task";
 import {
   KeyboardAvoidingView,
   StyleSheet,
@@ -12,37 +15,44 @@ import {
   StatusBar,
   Platform,
 } from "react-native";
-import Task from "./components/Task";
+
+// SplashScreen.preventAutoHideAsync();
 
 export default function App() {
   const [task, setTask] = useState<string>();
   const [taskItems, setTaskItems] = useState<any>([]);
 
-  //test
-  const handleAddTask = () => {
+  // adds a task
+  const addTask = () => {
     if (task != null && task.trim() != "") {
       Keyboard.dismiss();
-      setTaskItems([...taskItems, task.trim()]);
+      // setTaskItems([...taskItems, task.trim()]);
+      taskItems.push(task.trim());
       setTask("");
-    } else {
-      // alert("Enter a task");
     }
   };
+  // "deletes" the current task
   const completeTask = (index: number) => {
     let itemsCopy = [...taskItems];
     itemsCopy.splice(index, 1);
     setTaskItems(itemsCopy);
   };
+  // deletes all tasks from the list
   const deleteAll = () => {
-    Alert.alert("Delete All", "Are you sure you want to?", [
+    Alert.alert("Delete All", "Are you sure???", [
       {
         text: "Cancel",
         onPress: () => console.log("Cancel Pressed"),
-        style: "cancel",
+        // style: "cancel",
       },
       { text: "Delete All", onPress: () => setTaskItems([]) },
     ]);
   };
+
+  // used for testing
+  useEffect(() => {
+    setTaskItems([...taskItems, "Task 1", "Task 2"]);
+  }, []);
 
   return (
     <View style={styles.container}>
@@ -56,9 +66,16 @@ export default function App() {
       >
         {/* Today's Tasks */}
         <View style={styles.tasksWrapper}>
-          <Text style={styles.sectionTitle}>Today's Tasks</Text>
+          <View style={styles.header}>
+            <Text style={styles.sectionTitle}>Today's Tasks</Text>
+            <View
+              style={taskItems.length > 0 ? styles.square : styles.squareZero}
+            >
+              <Text style={styles.squareNumber}>{taskItems.length}</Text>
+            </View>
+          </View>
           {taskItems.length == 0 ? (
-            <Text style={styles.noTasks}>No Tasks 😊</Text>
+            <Text style={styles.noTasks}>No Tasks</Text>
           ) : null}
 
           <View style={styles.items}>
@@ -70,12 +87,16 @@ export default function App() {
 
             {taskItems.map((item: any, index: number) => {
               return (
-                <TouchableOpacity
-                  key={index}
-                  // onPress={() => completeTask(index)}
-                >
-                  <Task text={item} num={index + 1} />
-                </TouchableOpacity>
+                // <TouchableOpacity
+                //   key={index}
+                //   onPress={() => completeTask(index)}
+                // >
+                <Task
+                  text={item}
+                  num={index}
+                  completeTask={() => completeTask(index)}
+                />
+                // {/* </TouchableOpacity> */}
               );
             })}
           </View>
@@ -95,15 +116,17 @@ export default function App() {
           maxLength={50}
           onChangeText={(e) => setTask(e)}
         />
-        <TouchableOpacity onPress={() => handleAddTask()}>
+        <TouchableOpacity onPress={() => addTask()}>
           <View style={styles.addWrapper}>
             <Text style={styles.addText}>+</Text>
           </View>
         </TouchableOpacity>
       </KeyboardAvoidingView>
-      <Text style={styles.deleteAll} onPress={() => deleteAll()}>
-        Delete All
-      </Text>
+      {taskItems.length > 0 ? (
+        <Text style={styles.deleteAll} onPress={() => deleteAll()}>
+          Delete All
+        </Text>
+      ) : null}
     </View>
   );
 }
@@ -118,14 +141,44 @@ const styles = StyleSheet.create({
     paddingTop: 80,
     paddingHorizontal: 20,
   },
+  header: {
+    flexDirection: "row",
+  },
   sectionTitle: {
     fontSize: 34,
-    fontWeight: "bold",
+    // fontWeight: "bold",
     color: "#E5E7EB",
     letterSpacing: 3,
+    // fontFamily: "Raleway",
+  },
+  square: {
+    width: 24,
+    height: 24,
+    backgroundColor: "#EE2D2D",
+    // backgroundColor: "#59F472",
+    opacity: 0.8,
+    borderRadius: 5,
+    marginTop: 10,
+    marginLeft: 10,
+  },
+  squareZero: {
+    width: 24,
+    height: 24,
+    backgroundColor: "#59F472",
+    opacity: 0.8,
+    borderRadius: 5,
+    marginTop: 10,
+    marginLeft: 10,
+  },
+  squareNumber: {
+    color: "#000",
+    fontSize: 20,
+    textAlign: "center",
+    fontWeight: "bold",
   },
   items: {
     marginTop: 30,
+    marginBottom: 100,
     // Shadow
     shadowColor: "#000",
     shadowOffset: {
@@ -149,10 +202,11 @@ const styles = StyleSheet.create({
     paddingVertical: 15,
     paddingHorizontal: 15,
     backgroundColor: "#282828",
-    borderRadius: 60,
+    borderRadius: 10,
     borderColor: "black",
     borderWidth: 1.5,
-    width: "75%",
+    width: "80%",
+    height: 50,
     // width: 300,
     color: "#E5E7EB",
     fontSize: 18,
@@ -168,10 +222,10 @@ const styles = StyleSheet.create({
     elevation: 5,
   },
   addWrapper: {
-    width: 60,
-    height: 60,
+    width: 50,
+    height: 50,
     backgroundColor: "#282828",
-    borderRadius: 60,
+    borderRadius: 10,
     justifyContent: "center",
     alignItems: "center",
     borderColor: "black",
@@ -196,9 +250,10 @@ const styles = StyleSheet.create({
     textAlign: "center",
     marginBottom: 35,
     fontWeight: "bold",
+    letterSpacing: 2,
   },
   noTasks: {
-    color: "#E5E7EB",
+    color: "#5F5F5F",
     fontSize: 18,
     letterSpacing: 2,
     textAlign: "center",

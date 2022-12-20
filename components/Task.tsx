@@ -1,49 +1,89 @@
 import React, { useState } from "react";
-import { View, Text, StyleSheet, TouchableOpacity, Alert } from "react-native";
+import {
+  View,
+  Text,
+  StyleSheet,
+  TouchableOpacity,
+  Animated,
+} from "react-native";
 import { Swipeable } from "react-native-gesture-handler";
+import Remove from "./Remove";
 
-const Task = ({ text, num }: { text: string; num: number }) => {
+const Task = ({
+  text,
+  num,
+  completeTask,
+}: {
+  text: string;
+  num: number;
+  completeTask: any;
+}) => {
   const [complete, setComplete] = useState(false);
-  const completed = () => {
-    setComplete(!complete);
-  };
+
+  // const renderRightActions = (
+  //   progress: Animated.AnimatedInterpolation,
+  //   dragAnimatedValue: Animated.AnimatedInterpolation,
+  // ) => {
+  //   const opacity = dragAnimatedValue.interpolate({
+  //     inputRange: [-150, 0],
+  //     outputRange: [1, 0],
+  //     extrapolate: 'clamp',
+  //   });
 
   return (
-    <Swipeable>
-      <View style={styles.item}>
-        <View style={styles.itemLeft}>
-          <View style={!complete ? styles.square : styles.squareComplete}>
-            <Text style={styles.number}>{num}</Text>
+    <>
+      <Swipeable>
+        <View style={styles.container}>
+          <View style={styles.item}>
+            <View style={styles.itemLeft}>
+              <View style={!complete ? styles.square : styles.squareComplete}>
+                <Text style={styles.number}>{num + 1}</Text>
+              </View>
+              <Text
+                style={!complete ? styles.itemText : styles.itemTextCompleted}
+              >
+                {text}
+              </Text>
+            </View>
+            {/* <TouchableOpacity onPress={completeTask}> */}
+            <TouchableOpacity onPress={() => setComplete(!complete)}>
+              <View style={!complete ? styles.circle : styles.circleFilled}>
+                {complete ? <Text style={{ fontSize: 10 }}>✔</Text> : null}
+              </View>
+            </TouchableOpacity>
           </View>
-          <Text style={!complete ? styles.itemText : styles.itemTextCompleted}>
-            {text}
-          </Text>
+          {/*  */}
+          <Remove num={num} completeTask={() => completeTask(num)} />
         </View>
-        <TouchableOpacity onPress={completed}>
-          <View style={!complete ? styles.circle : styles.circleFilled}></View>
-        </TouchableOpacity>
-      </View>
-    </Swipeable>
+        {/*  */}
+      </Swipeable>
+    </>
   );
 };
 
 const styles = StyleSheet.create({
   item: {
     backgroundColor: "#282828",
-    // backgroundColor: "#FFF",
     padding: 15,
     borderRadius: 10,
+    height: 55,
     flexDirection: "row",
     alignItems: "center",
     justifyContent: "space-between",
     marginBottom: 20,
     borderColor: "black",
     borderWidth: 1.5,
+    //
+    width: "87%",
   },
   itemLeft: {
     flexDirection: "row",
     alignItems: "center",
     flexWrap: "wrap",
+  },
+  container: {
+    flexDirection: "row",
+    justifyContent: "space-between",
   },
   square: {
     width: 24,
@@ -72,6 +112,7 @@ const styles = StyleSheet.create({
     maxWidth: "80%",
     fontSize: 18,
     letterSpacing: 2,
+    // fontFamily: "Lato",
   },
   itemTextCompleted: {
     color: "#8C8C8C",
@@ -94,7 +135,12 @@ const styles = StyleSheet.create({
     borderWidth: 2,
     borderRadius: 5,
     backgroundColor: "#59F472",
+    alignItems: "center",
+    justifyContent: "center",
   },
+  // delete button
+  deleteButton: {},
+  deleteButtonText: {},
 });
 
 export default Task;

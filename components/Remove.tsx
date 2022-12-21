@@ -1,9 +1,7 @@
 import React from "react";
 import { View, Text, StyleSheet, TouchableOpacity, Alert } from "react-native";
 
-const Remove = ({ num, completeTask }: { num: number; completeTask: any }) => {
-  const removeTask = () => {};
-  //   onPress={() => completeTask(index)}
+const Remove = ({ completeTask }: { completeTask: any }) => {
   return (
     <>
       <TouchableOpacity onPress={completeTask}>
@@ -35,7 +33,7 @@ const styles = StyleSheet.create({
     elevation: 5,
   },
   removeText: {
-    color: "#EE2D2D",
+    color: "#1380FE",
     fontSize: 35,
   },
 });

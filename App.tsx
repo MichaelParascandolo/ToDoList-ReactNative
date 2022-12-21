@@ -15,6 +15,12 @@ import {
   StatusBar,
   Platform,
 } from "react-native";
+//
+//  two pages maybe?
+//  one for all the completed tasks...
+//  when you complete a task it switches to the other screen
+//  total number of completed tasks is updated
+//
 
 // SplashScreen.preventAutoHideAsync();
 
@@ -39,11 +45,9 @@ export default function App() {
   };
   // deletes all tasks from the list
   const deleteAll = () => {
-    Alert.alert("Delete All", "Are you sure???", [
+    Alert.alert("Delete All", "Are you sure?", [
       {
         text: "Cancel",
-        onPress: () => console.log("Cancel Pressed"),
-        // style: "cancel",
       },
       { text: "Delete All", onPress: () => setTaskItems([]) },
     ]);
@@ -56,7 +60,7 @@ export default function App() {
 
   return (
     <View style={styles.container}>
-      <StatusBar backgroundColor="#EE2D2D" barStyle={"light-content"} />
+      <StatusBar backgroundColor="#1380FE" barStyle={"light-content"} />
       {/* Added this scroll view to enable scrolling when list gets longer than the page */}
       <ScrollView
         contentContainerStyle={{
@@ -87,18 +91,19 @@ export default function App() {
 
             {taskItems.map((item: any, index: number) => {
               return (
-                // <TouchableOpacity
-                //   key={index}
-                //   onPress={() => completeTask(index)}
-                // >
                 <Task
                   text={item}
                   num={index}
+                  key={index}
                   completeTask={() => completeTask(index)}
                 />
-                // {/* </TouchableOpacity> */}
               );
             })}
+            {taskItems.length > 0 ? (
+              <Text style={styles.deleteAll} onPress={() => deleteAll()}>
+                Delete All
+              </Text>
+            ) : null}
           </View>
         </View>
       </ScrollView>
@@ -122,11 +127,7 @@ export default function App() {
           </View>
         </TouchableOpacity>
       </KeyboardAvoidingView>
-      {taskItems.length > 0 ? (
-        <Text style={styles.deleteAll} onPress={() => deleteAll()}>
-          Delete All
-        </Text>
-      ) : null}
+      {/* Delete all button here */}
     </View>
   );
 }
@@ -154,7 +155,7 @@ const styles = StyleSheet.create({
   square: {
     width: 24,
     height: 24,
-    backgroundColor: "#EE2D2D",
+    backgroundColor: "#1380FE",
     // backgroundColor: "#59F472",
     opacity: 0.8,
     borderRadius: 5,
@@ -241,15 +242,14 @@ const styles = StyleSheet.create({
     elevation: 5,
   },
   addText: {
-    color: "#EE2D2D",
+    color: "#1380FE",
     fontSize: 35,
   },
   deleteAll: {
-    color: "#EE2D2D",
+    color: "#1380FE",
     fontSize: 15,
     textAlign: "center",
-    marginBottom: 35,
-    fontWeight: "bold",
+    marginBottom: 30,
     letterSpacing: 2,
   },
   noTasks: {

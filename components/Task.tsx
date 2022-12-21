@@ -32,12 +32,19 @@ const Task = ({
 
   return (
     <>
+      {/* <Motion.View animate={{}}> */}
       <Swipeable>
         <View style={styles.container}>
           <View style={styles.item}>
             <View style={styles.itemLeft}>
               <View style={!complete ? styles.square : styles.squareComplete}>
-                <Text style={styles.number}>{num + 1}</Text>
+                {!complete ? (
+                  <Text style={styles.number}>{num + 1}</Text>
+                ) : (
+                  <TouchableOpacity onPress={completeTask}>
+                    <Text style={styles.number}>X</Text>
+                  </TouchableOpacity>
+                )}
               </View>
               <Text
                 style={!complete ? styles.itemText : styles.itemTextCompleted}
@@ -45,18 +52,16 @@ const Task = ({
                 {text}
               </Text>
             </View>
-            {/* <TouchableOpacity onPress={completeTask}> */}
             <TouchableOpacity onPress={() => setComplete(!complete)}>
               <View style={!complete ? styles.circle : styles.circleFilled}>
                 {complete ? <Text style={{ fontSize: 10 }}>✔</Text> : null}
               </View>
             </TouchableOpacity>
           </View>
-          {/*  */}
-          <Remove num={num} completeTask={() => completeTask(num)} />
+          {/* <Remove completeTask={() => completeTask(num)} /> */}
         </View>
-        {/*  */}
       </Swipeable>
+      {/* </Motion.View> */}
     </>
   );
 };
@@ -74,7 +79,7 @@ const styles = StyleSheet.create({
     borderColor: "black",
     borderWidth: 1.5,
     //
-    width: "87%",
+    // width: "87%",
   },
   itemLeft: {
     flexDirection: "row",
@@ -82,13 +87,13 @@ const styles = StyleSheet.create({
     flexWrap: "wrap",
   },
   container: {
-    flexDirection: "row",
-    justifyContent: "space-between",
+    // flexDirection: "row",
+    // justifyContent: "space-between",
   },
   square: {
     width: 24,
     height: 24,
-    backgroundColor: "#EE2D2D",
+    backgroundColor: "#1380FE",
     opacity: 0.8,
     borderRadius: 5,
     marginRight: 15,
@@ -124,7 +129,7 @@ const styles = StyleSheet.create({
   circle: {
     width: 20,
     height: 20,
-    borderColor: "#EE2D2D",
+    borderColor: "#1380FE",
     borderWidth: 2,
     borderRadius: 5,
   },
